@@ -1,6 +1,6 @@
 // import './App.css'
 
-import AddTodo from "./components/AddTodo";
+import AddTodo from "./components/AddTodoForm";
 import Header from "./components/Header";
 import Status from "./components/Status";
 import TodoList from "./components/TodoList";
