@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { AddTodo } from '../features/Todos/TodosSlice';
+import { AddTodo, addAsyncTodo } from '../features/Todos/TodosSlice';
 
 export default function AddTodoForm() {
   const [title,setTitle] = useState("");
@@ -8,7 +8,7 @@ export default function AddTodoForm() {
   const addHandler =(e)=>{
     e.preventDefault();
     if (!title) return;
-    dispatch(AddTodo({title:title}));
+    dispatch(addAsyncTodo({title:title}));
     setTitle("");
   }
   return (
