@@ -9,7 +9,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "dev-tailwind": "npx tailwindcss -i ./src/input.css -o ./src/index.css --watch",
-    "server": "json-server server/db.json --watch -p 5000"
+    "server": "json-server server/db.json --watch -p 5001"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.1",

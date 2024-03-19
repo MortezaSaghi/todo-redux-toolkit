@@ -3,6 +3,7 @@ import { DeleteTodo, ToggleTodo, deleteAsyncTodo, getAsyncTodos, toggleAsyncTodo
 import { useEffect } from "react";
 import Loading from "./Loading";
 import ErrorPanel from "./ErrorPanel";
+import Empty from "./Empty";
 
 // const todos = [
 //   { id: 1, title: "todo one", completed: false },
@@ -15,6 +16,7 @@ export default function TodoList() {
   useEffect(()=>{
     dispatch(getAsyncTodos())
   },[])
+  if (!todos.length) return <Empty/>
   if (loading) return <Loading/>
   if (error) return <ErrorPanel error={error}/>
   return (

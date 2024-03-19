@@ -7,8 +7,9 @@ const initialState = {
   error: "",
 };
 const api = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "http://localhost:5001",
 });
+
 export const getAsyncTodos = createAsyncThunk(
   "todos/getAsyncTodos",
   async (_, { rejectWithValue }) => {
@@ -25,7 +26,7 @@ export const addAsyncTodo = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const response = await api.post("/todos", {
-        id: Date.now(),
+        id: String(Date.now()),
         title: payload.title,
         completed: false,
       });
@@ -39,10 +40,8 @@ export const deleteAsyncTodo = createAsyncThunk(
   "todos/deleteAsyncTodo",
   async (payload, { rejectWithValue }) => {
     try {
-      console.log(payload.id);
       await api.delete(`/todos/${payload.id}`);
       return { id: payload.id };
-      // console.log(payload)
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -54,7 +53,7 @@ export const toggleAsyncTodo = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const response = await api.patch(`/todos/${payload.id}`, {
-        completed: payload.completed,
+        completed: !payload.completed,
       });
       return response.data;
     } catch (error) {
@@ -66,25 +65,25 @@ export const toggleAsyncTodo = createAsyncThunk(
 const TodoSlice = createSlice({
   name: "todos",
   initialState,
-  reducers: {
-    AddTodo: (state, action) => {
-      const newTodo = {
-        id: Date.now(),
-        title: action.payload.title,
-        completed: false,
-      };
-      state.todos.push(newTodo);
-    },
-    ToggleTodo: (state, action) => {
-      const selectedTodo = state.todos.find(
-        (todo) => todo.id === action.payload.id
-      );
-      selectedTodo.completed = !action.payload.completed;
-    },
-    DeleteTodo: (state, action) => {
-      state.todos = state.todos.filter((todo) => todo.id !== action.payload.id);
-    },
-  },
+  // reducers: {
+  //   AddTodo: (state, action) => {
+  //     const newTodo = {
+  //       id: Date.now(),
+  //       title: action.payload.title,
+  //       completed: false,
+  //     };
+  //     state.todos.push(newTodo);
+  //   },
+  //   ToggleTodo: (state, action) => {
+  //     const selectedTodo = state.todos.find(
+  //       (todo) => todo.id === action.payload.id
+  //     );
+  //     selectedTodo.completed = !action.payload.completed;
+  //   },
+  //   DeleteTodo: (state, action) => {
+  //     state.todos = state.todos.filter((todo) => todo.id !== action.payload.id);
+  //   },
+  // },
   extraReducers: (builder) => {
     builder
       .addCase(getAsyncTodos.pending, (state) => {
@@ -115,14 +114,14 @@ const TodoSlice = createSlice({
       .addCase(deleteAsyncTodo.fulfilled, (state, action) => {
         state.loading = false;
         state.todos = state.todos.filter(
-          (todo) => todo.id !== Number(action.payload.id)
-        );
-      })
-      .addCase(toggleAsyncTodo.fulfilled, (state, action) => {
-        state.loading = false;
-        const selectedTodo = state.todos.find(
-          (todo) => todo.id === Number(action.payload.id)
-        );
+          (todo) => todo.id !== action.payload.id
+          );
+        })
+        .addCase(toggleAsyncTodo.fulfilled, (state, action) => {
+          state.loading = false;
+          const selectedTodo = state.todos.find(
+            (todo) => todo.id === action.payload.id
+            );
         selectedTodo.completed = action.payload.completed;
       });
   },
